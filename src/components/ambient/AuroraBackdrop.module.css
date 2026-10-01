@@ -1,0 +1,130 @@
+/*
+ * Aurora backdrop — three soft orbs drifting on the `aurora-drift` keyframes
+ * that are frozen into app/globals.css.
+ *
+ * WHY A CSS MODULE AND NOT UTILITY CLASSES
+ * The intensity of this effect has to differ between themes, and AGENTS.md rule
+ * 7 forbids branching on theme inside a component. Expressing the strength as a
+ * custom property with a `.dark` override keeps that decision in CSS: no
+ * `useTheme()`, no re-render when the visitor flips the theme, and the browser
+ * interpolates nothing — it just swaps one number.
+ *
+ * WHY `color-mix` INSTEAD OF THREE HARDCODED COLOURS
+ * globals.css only defines the `sage` and `coral` brand tokens. Deriving the
+ * extra two families from those keeps every orb in the token set, so the whole
+ * backdrop re-tints correctly in both themes without a second palette.
+ *
+ * PERF CONTRACT
+ * `transform` is the ONLY animated property. The blur is a static filter on a
+ * layer promoted once via `will-change`, so the browser rasterises the blurred
+ * texture a single time and afterwards only moves that texture on the
+ * compositor. Animating `filter` instead would re-run the blur every frame,
+ * which is exactly what kills mid-range Android. Orb sizes are capped with
+ * `min()` so a 360px phone rasterises a ~330px square rather than a ~700px one.
+ *
+ * `@keyframes` names are document-global (they do not cascade and are not
+ * scoped to a cascade layer), so referencing `aurora-drift` from this file
+ * resolves to the single definition in globals.css.
+ */
+
+.root {
+  /* Warm editorial light theme: present, but never in the way. */
+  --aurora-strength: 22%;
+  --aurora-sage: var(--sage);
+  --aurora-moss: color-mix(in oklab, var(--sage) 60%, var(--foreground) 40%);
+  --aurora-plum: color-mix(in oklab, var(--coral) 45%, var(--sage) 55%);
+
+  position: fixed;
+  inset: 0;
+  /* Furthest back of the whole app: behind the dot grid and behind all
+     in-flow content. Safe because <html> has no background of its own, so
+     <body>'s background propagates to the canvas and is always painted first. */
+  z-index: -2;
+  /* The orbs bleed past the viewport on purpose; this keeps them from ever
+     producing scrollable overflow. */
+  overflow: hidden;
+  contain: paint;
+  pointer-events: none;
+}
+
+/* Dark theme is the aurora-glass theme: the colour is the point there, so it
+   gets roughly twice the presence. Same variables, different number. */
+:global(.dark) .root {
+  --aurora-strength: 40%;
+}
+
+/* Additive blending is what makes overlapping orbs read as light rather than
+   as translucent paint. It only looks right against a dark backdrop, so it is
+   scoped to the dark theme, and to large viewports where three orbs large
+   enough to overlap are actually on screen at once. */
+@media (min-width: 64rem) {
+  :global(.dark) .root {
+    mix-blend-mode: plus-lighter;
+  }
+}
+
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  will-change: transform;
+  animation-name: aurora-drift;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.sage {
+  width: min(44rem, 92vw);
+  height: min(44rem, 92vw);
+  left: -16vw;
+  top: -20vh;
+  animation-duration: 38s;
+  /* Negative delays, not zero: an infinite animation with a negative delay
+     starts as though it had already been running that long, which is what
+     staggers the three orbs without any extra timers. */
+  animation-delay: 0s;
+  background: radial-gradient(
+    closest-side circle,
+    color-mix(in oklab, var(--aurora-sage) var(--aurora-strength), transparent) 0%,
+    transparent 72%
+  );
+}
+
+.plum {
+  width: min(32rem, 78vw);
+  height: min(32rem, 78vw);
+  right: -12vw;
+  top: -10vh;
+  animation-duration: 46s;
+  animation-delay: -15s;
+  background: radial-gradient(
+    closest-side circle,
+    color-mix(in oklab, var(--aurora-plum) var(--aurora-strength), transparent) 0%,
+    transparent 70%
+  );
+}
+
+.moss {
+  width: min(38rem, 88vw);
+  height: min(38rem, 88vw);
+  left: 4vw;
+  bottom: -24vh;
+  animation-duration: 54s;
+  animation-delay: -30s;
+  background: radial-gradient(
+    closest-side circle,
+    color-mix(in oklab, var(--aurora-moss) var(--aurora-strength), transparent) 0%,
+    transparent 70%
+  );
+}
+
+/*
+ * globals.css already collapses animations globally, but this layer does not
+ * rely on that: it cancels its own motion outright so the orbs are genuinely
+ * still and no compositor layer is held for an image that will never move.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .orb {
+    animation: none !important;
+    will-change: auto;
+  }
+}

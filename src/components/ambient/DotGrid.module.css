@@ -1,0 +1,57 @@
+.root {
+  position: fixed;
+  inset: 0;
+  /* Behind in-flow content but above the aurora backdrop (z-index -2 in
+     the module). -1 keeps it off the negative layer stack so it does not
+     interleave oddly with any other full-bleed decor that might appear. */
+  z-index: -1;
+  pointer-events: none;
+  contain: paint;
+}
+
+/*
+ * Both layers are the same tile: a 1px-radius dot on a 22px lattice, drawn
+ * with `background-image` + `background-size` so the browser repeats one small
+ * raster rather than laying out thousands of elements. No SVG, no canvas.
+ */
+.baseDots,
+.revealDots {
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    circle at center,
+    var(--sage) 0.5px,
+    transparent 0.9px
+  );
+  background-size: 22px 22px;
+  background-repeat: repeat;
+}
+
+/*
+ * Base layer. Present unconditionally and deliberately faint, so the grid still
+ * reads as texture when no cursor exists (touch, keyboard-only, idle pointer).
+ */
+.baseDots {
+  opacity: 0.07;
+}
+
+/*
+ * Reveal layer. Identical lattice, brighter, and masked by the global
+ * `.cursor-reveal` utility, which centres a `radial-gradient` on the
+ * `--cx`/`--cy` the cursor engine already publishes to `<body>`. This component
+ * adds no listener of its own.
+ */
+.revealDots {
+  opacity: 0.2;
+}
+
+/* Narrow viewports: dial both layers back so the grid stays a whisper and the
+   extra composited layer is not worth its cost at 360px. */
+@media (max-width: 48rem) {
+  .baseDots {
+    opacity: 0.05;
+  }
+  .revealDots {
+    opacity: 0.14;
+  }
+}
