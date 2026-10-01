@@ -1,26 +1,350 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
+
+/* ============================================================
+   Bhavitha — AI Portfolio design tokens
+   Light = warm editorial default. Dark = aurora glass.
+   Same variable names in both themes: components never branch on theme.
+   ============================================================ */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Brand */
+  --color-sage: var(--sage);
+  --color-sage-soft: var(--sage-soft);
+  --color-coral: var(--coral);
+  --color-coral-soft: var(--coral-soft);
+
+  /* Glass system */
+  --color-glass: var(--glass);
+  --color-glass-strong: var(--glass-strong);
+  --color-hairline: var(--hairline);
+
+  --font-sans: var(--font-body);
   --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
+
+  --radius-sm: calc(var(--radius) * 0.5);
+  --radius-md: calc(var(--radius) * 0.75);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.35);
+  --radius-2xl: calc(var(--radius) * 1.75);
+  --radius-3xl: calc(var(--radius) * 2.25);
+
+  /* Fluid type scale */
+  --text-hero: clamp(2.5rem, 1.6rem + 4.2vw, 4rem);
+  --text-h2: clamp(1.5rem, 1.25rem + 1.2vw, 2rem);
+  --text-h3: clamp(1.15rem, 1.05rem + 0.5vw, 1.375rem);
+  --text-body: 1rem;
+  --text-small: 0.875rem;
+
+  --shadow-soft: var(--shadow-soft);
+  --shadow-lift: var(--shadow-lift);
+  --shadow-glow: var(--shadow-glow);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  /* Warm off-white, ink text */
+  --background: oklch(0.977 0.008 85);
+  --foreground: oklch(0.205 0.012 145);
+
+  --card: oklch(1 0 0 / 0.72);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.995 0.004 85);
+  --popover-foreground: var(--foreground);
+
+  --primary: oklch(0.505 0.072 145);
+  --primary-foreground: oklch(0.99 0.005 100);
+
+  --secondary: oklch(0.955 0.01 85);
+  --secondary-foreground: var(--foreground);
+
+  --muted: oklch(0.955 0.008 85);
+  --muted-foreground: oklch(0.505 0.014 145);
+
+  --accent: oklch(0.945 0.022 55);
+  --accent-foreground: oklch(0.32 0.04 45);
+
+  --destructive: oklch(0.577 0.208 27);
+
+  --border: oklch(0.205 0.012 145 / 0.12);
+  --input: oklch(0.205 0.012 145 / 0.14);
+  --ring: oklch(0.505 0.072 145 / 0.55);
+
+  /* Brand: sage green (plants) + warm coral (creativity) */
+  --sage: oklch(0.545 0.085 148);
+  --sage-soft: oklch(0.925 0.035 148);
+  --coral: oklch(0.685 0.145 42);
+  --coral-soft: oklch(0.945 0.04 55);
+
+  /* Glass — light theme reads as translucent paper, not chrome */
+  --glass: oklch(1 0 0 / 0.55);
+  --glass-strong: oklch(1 0 0 / 0.78);
+  --hairline: oklch(0.205 0.012 145 / 0.1);
+
+  --shadow-soft: 0 1px 2px oklch(0.205 0.012 145 / 0.04),
+    0 4px 12px oklch(0.205 0.012 145 / 0.05);
+  --shadow-lift: 0 2px 4px oklch(0.205 0.012 145 / 0.05),
+    0 12px 28px oklch(0.205 0.012 145 / 0.08);
+  --shadow-glow: 0 0 0 1px oklch(0.545 0.085 148 / 0.18),
+    0 8px 32px oklch(0.545 0.085 148 / 0.14);
+
+  --radius: 1.25rem;
+  color-scheme: light;
+}
+
+.dark {
+  /* Warm soft charcoal — deliberately not blue-black */
+  --background: oklch(0.175 0.012 145);
+  --foreground: oklch(0.945 0.008 85);
+
+  --card: oklch(0.225 0.014 145 / 0.62);
+  --card-foreground: var(--foreground);
+  --popover: oklch(0.215 0.014 145 / 0.94);
+  --popover-foreground: var(--foreground);
+
+  --primary: oklch(0.735 0.105 150);
+  --primary-foreground: oklch(0.18 0.02 145);
+
+  --secondary: oklch(0.265 0.014 145);
+  --secondary-foreground: var(--foreground);
+
+  --muted: oklch(0.265 0.014 145);
+  --muted-foreground: oklch(0.745 0.014 145);
+
+  --accent: oklch(0.325 0.035 48);
+  --accent-foreground: oklch(0.95 0.03 60);
+
+  --destructive: oklch(0.665 0.185 25);
+
+  --border: oklch(0.945 0.008 85 / 0.12);
+  --input: oklch(0.945 0.008 85 / 0.15);
+  --ring: oklch(0.735 0.105 150 / 0.6);
+
+  --sage: oklch(0.735 0.105 150);
+  --sage-soft: oklch(0.735 0.105 150 / 0.16);
+  --coral: oklch(0.745 0.125 45);
+  --coral-soft: oklch(0.745 0.125 45 / 0.16);
+
+  --glass: oklch(0.24 0.016 145 / 0.52);
+  --glass-strong: oklch(0.255 0.016 145 / 0.74);
+  --hairline: oklch(0.945 0.008 85 / 0.1);
+
+  --shadow-soft: 0 1px 2px oklch(0 0 0 / 0.3), 0 4px 14px oklch(0 0 0 / 0.34);
+  --shadow-lift: 0 2px 6px oklch(0 0 0 / 0.34), 0 16px 36px oklch(0 0 0 / 0.44);
+  --shadow-glow: 0 0 0 1px oklch(0.735 0.105 150 / 0.24),
+    0 8px 36px oklch(0.735 0.105 150 / 0.18);
+
+  color-scheme: dark;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply font-sans;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    /* Cursor-tracked spotlight, written by the cursor engine. */
+    --cx: 50vw;
+    --cy: 50vh;
+    --cursor-opacity: 0;
+  }
+
+  /* Hide the native cursor ONLY on precise pointers.
+     Never on touch — otherwise a phone user gets no cursor feedback at all. */
+  @media (hover: hover) and (pointer: fine) {
+    html.has-custom-cursor,
+    html.has-custom-cursor * {
+      cursor: none !important;
+    }
+  }
+
+  ::selection {
+    background: var(--sage-soft);
+    color: var(--foreground);
+  }
+
+  /* Visible focus for keyboard users, never for mouse */
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  /* Thin, theme-aware scrollbars */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: var(--border);
+    border-radius: 999px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Frosted panel: blur + a top inner highlight that reads as a lit edge. */
+  .glass {
+    background: var(--glass);
+    backdrop-filter: blur(24px) saturate(140%);
+    -webkit-backdrop-filter: blur(24px) saturate(140%);
+    border: 1px solid var(--hairline);
+    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.14), var(--shadow-soft);
+  }
+
+  .glass-strong {
+    background: var(--glass-strong);
+    backdrop-filter: blur(32px) saturate(150%);
+    -webkit-backdrop-filter: blur(32px) saturate(150%);
+    border: 1px solid var(--hairline);
+    box-shadow: inset 0 1px 0 oklch(1 0 0 / 0.16), var(--shadow-lift);
+  }
+
+  /* Gradient hairline border that traces the pointer. Requires --mx/--my
+     (set by CursorSpotlight) with a sane fallback so it degrades gracefully. */
+  .pointer-border {
+    position: relative;
+  }
+  .pointer-border::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: radial-gradient(
+      18rem circle at var(--mx, 50%) var(--my, 50%),
+      var(--sage),
+      transparent 60%
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+  .pointer-border:hover::before {
+    opacity: 1;
+  }
+
+  /* Radial mask following the cursor — used to reveal the dot grid. */
+  .cursor-reveal {
+    -webkit-mask-image: radial-gradient(
+      22rem circle at var(--cx) var(--cy),
+      #000 0%,
+      transparent 70%
+    );
+    mask-image: radial-gradient(
+      22rem circle at var(--cx) var(--cy),
+      #000 0%,
+      transparent 70%
+    );
+  }
+
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .dark .grain::after {
+    opacity: 0.06;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Elements pulled toward the cursor. Both axes are set by Magnetic. */
+  .magnetic {
+    transform: translate3d(var(--pull-x, 0px), var(--pull-y, 0px), 0);
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .animate-float {
+    animation: float 5s ease-in-out infinite;
+  }
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-4px);
+    }
+  }
+
+  @keyframes aurora-drift {
+    0%,
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    33% {
+      transform: translate3d(6%, -4%, 0) scale(1.12);
+    }
+    66% {
+      transform: translate3d(-5%, 5%, 0) scale(0.94);
+    }
+  }
+}
+
+/* Respect the OS setting everywhere. Animations collapse to static,
+   magnetic pull and cursor inertia are disabled in JS (see cursor.tsx). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .magnetic {
+    transform: none !important;
+  }
 }
