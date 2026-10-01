@@ -85,6 +85,9 @@ export function Composer({
           ref={textareaRef}
           rows={1}
           value={value}
+          // Opt-in only, and off by default: on mobile the keyboard would
+          // cover the hero.
+          autoFocus={autoFocus}
           // The cursor engine reads this attribute; no JS wiring needed.
           data-cursor="input"
           disabled={replying}

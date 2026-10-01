@@ -146,13 +146,18 @@ export function MessageList({
   }, [getViewport, messages.length]);
 
   // A new user turn always re-pins: the user just acted, they want to see it.
-  useEffect(() => {
-    if (messages.length === 0) {
-      setPinned(true);
-      return;
-    }
-    if (messages[messages.length - 1]?.role === "user") setPinned(true);
-  }, [messages]);
+  //
+  // This is a render-phase adjustment (React's documented pattern for deriving
+  // state from a prop change) rather than an effect, which would cause a
+  // cascading render and a visible lag before the scroll catches up.
+  const lastMessage = messages[messages.length - 1];
+  const lastMessageId = lastMessage?.id ?? null;
+  const [pinnedFor, setPinnedFor] = useState<string | null>(lastMessageId);
+
+  if (lastMessageId !== pinnedFor) {
+    if (lastMessage?.role === "user") setPinned(true);
+    setPinnedFor(lastMessageId);
+  }
 
   // Follow the stream while pinned. `messages` is a new array per chunk, so
   // this re-runs exactly as often as the content actually changes.

@@ -14,6 +14,12 @@
  *   2. Missing data is never printed as a blank. `github`, `codechef` and
  *      `resumeUrl` are empty strings today, so those lines are simply absent —
  *      the model therefore cannot mention a link that does not exist.
+ *
+ * `profile.about`, `growth` and `codingReflection` are written in the first
+ * person because that is how the owner wrote them. They are transcribed
+ * verbatim: rewriting someone's own words is how paraphrases quietly turn into
+ * embellishments, and prompt.ts already tells the model to speak about her in
+ * the third person.
  */
 
 import { profile, type Status } from "@/data/profile";

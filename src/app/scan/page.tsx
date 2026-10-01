@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { profile } from "@/data/profile";
 
 /**
@@ -154,9 +155,9 @@ export default function ScanPage() {
       <footer className="border-t border-border pt-6 text-sm text-muted-foreground">
         <p className="italic">{profile.motto}</p>
         <p className="mt-2">
-          <a href="/" className="underline">
+          <Link href="/" className="underline">
             Back to the interactive assistant
-          </a>
+          </Link>
         </p>
       </footer>
     </main>

@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { profile } from "@/data/profile";
 import { notFound } from "next/navigation";
 
@@ -29,9 +30,9 @@ export default async function ProjectPage({ params }: PageProps<"/p/[slug]">) {
   return (
     <main className="mx-auto max-w-2xl px-6 py-12">
       <p>
-        <a href="/" className="text-sm underline">
+        <Link href="/" className="text-sm underline">
           ← Back
-        </a>
+        </Link>
       </p>
       <header className="mt-4 space-y-2 border-b border-border pb-6">
         <h1 className="text-2xl font-semibold">{project.title}</h1>

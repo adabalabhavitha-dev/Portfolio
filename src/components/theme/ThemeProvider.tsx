@@ -29,7 +29,6 @@ const THEME_SCRIPT = `(function(){try{var s=localStorage.getItem(${JSON.stringif
 function ThemeInitScript({ nonce }: { nonce?: string }) {
   return (
     <script
-      // eslint-disable-next-line react/no-danger
       suppressHydrationWarning
       nonce={nonce}
       dangerouslySetInnerHTML={{ __html: THEME_SCRIPT }}
@@ -106,3 +105,7 @@ export function ThemeProvider({
 }
 
 export { useTheme } from "next-themes";
+
+// Re-exported so the barrel can re-export the prop type without consumers
+// having to import from next-themes directly.
+export type { ThemeProviderProps };

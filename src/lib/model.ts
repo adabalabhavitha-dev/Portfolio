@@ -14,7 +14,12 @@
 
 import { google } from "@ai-sdk/google";
 import { openai } from "@ai-sdk/openai";
-import type { LanguageModel, ProviderOptions } from "ai";
+import type { LanguageModel } from "ai";
+// `ProviderOptions` is used internally by `ai` but is not re-exported from its
+// public entry point. `@ai-sdk/provider` owns the canonical definition
+// (`Record<string, JSONObject>`); declaring it locally would silently drift from
+// the type the SDK actually expects and fail to typecheck at the call site.
+import type { SharedV4ProviderOptions as ProviderOptions } from "@ai-sdk/provider";
 
 export type ModelProvider = "google" | "openai";
 

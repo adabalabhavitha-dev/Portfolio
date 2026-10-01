@@ -27,9 +27,25 @@ export function AboutCard({
 }) {
   const reduce = useReducedMotion();
   const paragraphs = Array.isArray(payload.about) ? payload.about : [];
+
   const lead = paragraphs.slice(0, 2);
   const rest = paragraphs.slice(2);
   const hasMore = rest.length > 0;
+
+  // The snapshot is a flat key/value object; keep only the four keys the server
+  // documents and drop anything blank so the list never renders an empty row.
+  const snapshotRows = (
+    [
+      ["Status", payload.snapshot?.currentStatus],
+      ["Career direction", payload.snapshot?.careerDirection],
+      ["Learning style", payload.snapshot?.learningPreference],
+      ["Programming", payload.snapshot?.programmingComfort],
+    ] satisfies ReadonlyArray<readonly [string, string | undefined]>
+  )
+    .filter((row): row is [string, string] =>
+      typeof row[1] === "string" && row[1].trim().length > 0,
+    )
+    .map((row) => [row[0], row[1]] as [string, string]);
 
   return (
     <CardShell label="About Bhavitha" delay={pending ? 0 : 0.04}>
@@ -48,7 +64,9 @@ export function AboutCard({
           }
         >
           <Avatar size="lg" data-cursor="card">
-            {payload.avatarUrl ? (
+            {/* `avatarUrl` is absent from the tool payload — the portfolio draws
+                its own avatar, so there is no raster to fall back to. */}
+            {typeof payload.avatarUrl === "string" && payload.avatarUrl ? (
               <AvatarImage src={payload.avatarUrl} alt="" />
             ) : null}
             <AvatarFallback aria-hidden>B</AvatarFallback>
@@ -91,6 +109,26 @@ export function AboutCard({
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
+          </Disclosure>
+        </div>
+      ) : null}
+
+      {snapshotRows.length > 0 ? (
+        <div className="mt-2">
+          <Disclosure label="Where things stand">
+            <dl className="space-y-2">
+              {snapshotRows.map(([label, value]) => (
+                <div
+                  key={label}
+                  className="grid grid-cols-[minmax(0,7rem)_1fr] gap-x-3 gap-y-0.5"
+                >
+                  <dt className="text-xs text-muted-foreground">{label}</dt>
+                  <dd className="text-[length:var(--text-small)] leading-relaxed">
+                    {value}
+                  </dd>
+                </div>
+              ))}
+            </dl>
           </Disclosure>
         </div>
       ) : null}

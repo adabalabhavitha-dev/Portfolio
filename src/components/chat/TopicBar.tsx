@@ -1,64 +1,23 @@
 "use client";
 
-import {
-  Briefcase,
-  Palette,
-  Sparkles,
-  User,
-  Wrench,
-  type LucideIcon,
-} from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { topics } from "@/data/topics";
 import { cn } from "@/lib/utils";
-import type { Topic } from "./types";
 
 /**
  * The five conversation starters.
  *
- * NOTE FOR INTEGRATION: `src/data/topics.ts` did not exist when this file was
- * written (agent D owns it), so the canonical list is defined here as a
- * fallback. At integration, prefer re-exporting agent D's list:
+ * The canonical list lives in `src/data/topics.ts` (agent D's area) so the
+ * buttons, the cacheable topic list, and the system prompt can never drift
+ * apart. It did not exist when this file was first written, so a local fallback
+ * was used; that fallback has since been deleted in favour of the real module.
  *
- *   import { topics } from "@/data/topics";
- *   export const TOPICS = topics;
- *
- * The `question` strings are the ONLY place a prompt is phrased. They must stay
- * consistent with the system prompt's tool descriptions.
+ * `question` is sent verbatim as a normal user message — the pills are a
+ * shortcut into free text, not a separate code path.
  */
-export const TOPICS: Topic[] = [
-  {
-    id: "about",
-    label: "Me",
-    icon: User,
-    question: "Tell me about yourself — who are you and what are you studying?",
-  },
-  {
-    id: "projects",
-    label: "Projects",
-    icon: Briefcase,
-    question: "What projects have you built? What is actually implemented in them?",
-  },
-  {
-    id: "skills",
-    label: "Skills",
-    icon: Wrench,
-    question: "What are your current skills, and what are you still learning?",
-  },
-  {
-    id: "fun",
-    label: "Fun",
-    icon: Palette,
-    question: "What do you enjoy outside of coursework?",
-  },
-  {
-    id: "contact",
-    label: "Contact",
-    icon: Sparkles,
-    question: "How can I get in touch with you?",
-  },
-];
+export const TOPICS = topics;
 
-export type { Topic };
+export type { Topic } from "@/data/topics";
 
 /**
  * Topic pills. Wraps to multiple rows on narrow screens; every pill is a real
@@ -69,7 +28,7 @@ export function TopicBar({
   disabled = false,
   className,
 }: {
-  onSelect: (topic: Topic) => void;
+  onSelect: (topic: (typeof TOPICS)[number]) => void;
   disabled?: boolean;
   className?: string;
 }) {

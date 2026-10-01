@@ -268,7 +268,15 @@ function Mouth({ state, live }: { state: AvatarState; live: boolean }) {
   }
 
   if (state === "thinking") {
-    return <ellipse cx="60" cy="77" rx="3.6" ry="4.4" style={{ fill: "var(--foreground)" }} />;
+    return (
+      <ellipse
+        cx="60"
+        cy="77"
+        rx="3.6"
+        ry="4.4"
+        style={{ fill: "var(--foreground)" }}
+      />
+    );
   }
 
   if (state === "happy") {

@@ -4,8 +4,10 @@ import { Info, Sparkles } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Pill } from "@/components/ui/primitives";
 import {
+  BulletList,
   CardHeader,
   CardShell,
+  Disclosure,
   NoteBox,
   statusLabel,
   statusTone,
@@ -29,6 +31,8 @@ export function SkillsCard({
 }) {
   const reduce = useReducedMotion();
   const skills = Array.isArray(payload.skills) ? payload.skills : [];
+  const journey = Array.isArray(payload.codingJourney) ? payload.codingJourney : [];
+  const goals = Array.isArray(payload.goals) ? payload.goals : [];
 
   return (
     <CardShell label="Skills" delay={pending ? 0 : 0.04}>
@@ -69,6 +73,41 @@ export function SkillsCard({
           ))}
         </ul>
       )}
+
+      {journey.length > 0 ? (
+        <div className="mt-4 space-y-1">
+          <Disclosure
+            label="Practice so far"
+            badge={
+              <Pill tone="sage" className="shrink-0">
+                {journey.length}
+              </Pill>
+            }
+          >
+            <BulletList items={journey} />
+            {payload.codingReflection ? (
+              <p className="mt-2.5 text-[length:var(--text-small)] leading-relaxed text-muted-foreground">
+                {payload.codingReflection}
+              </p>
+            ) : null}
+          </Disclosure>
+        </div>
+      ) : null}
+
+      {goals.length > 0 ? (
+        <div className="mt-1 space-y-1">
+          <Disclosure
+            label="Where I want to get to"
+            badge={
+              <Pill tone="goal" className="shrink-0">
+                Goals, not done
+              </Pill>
+            }
+          >
+            <BulletList items={goals} tone="goal" />
+          </Disclosure>
+        </div>
+      ) : null}
     </CardShell>
   );
 }

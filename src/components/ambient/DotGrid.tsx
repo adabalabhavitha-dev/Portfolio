@@ -2,21 +2,18 @@ import { cn } from "@/lib/utils";
 import styles from "./DotGrid.module.css";
 
 /**
- * Dot grid ambient layer. Revealed by the cursor via the global `.cursor-reveal`
- * utility (which uses `--cx`/`--cy` written by `CursorProvider` onto `body`).
+ * Dot grid ambient layer, revealed by the cursor through the global
+ * `.cursor-reveal` utility in `app/globals.css`.
  *
  * Two layers, both drawn with CSS `radial-gradient` (no SVG, no canvas):
- *  1. Static low-opacity dot layer — always visible, keeps the surface
- *     textured even when the cursor is idle or not present (coarse pointers,
- *     focus-only navigation, etc).
- *  2. Stronger reveal layer — masked by `radial-gradient(...) at var(--cx,var(--cy))`
- *     so only the area around the pointer punches through. The `cursor-reveal`
- *     class is defined once in `app/globals.css` to avoid duplicating the mask.
+ *  1. A static low-opacity dot layer, so the grid is still visible when the
+ *     pointer is idle or absent (touch devices, keyboard-only navigation).
+ *  2. A brighter reveal layer masked by `radial-gradient(...) at var(--cx,var(--cy))`.
+ *     Those two custom properties are already written to `<body>` every frame
+ *     by `CursorProvider`, so this component adds no listener and no state.
  *
- * Performance: only gradients and positioning; no React state; no event
- * handlers. `contain: paint` in CSS helps keep the repeated tile small. Blur is
- * not used. transform/opacity not animated here (the movement is purely the
- * mask's centre, which the cursor engine updates outside this layer).
+ * Perf: positions and repeating gradients only. No blur, no per-frame React, no
+ * scroll or resize handlers of its own.
  */
 export function DotGrid({ className }: { className?: string }) {
   return (
@@ -24,7 +21,7 @@ export function DotGrid({ className }: { className?: string }) {
       aria-hidden
       className={cn("pointer-events-none fixed inset-0", className, styles.root)}
     >
-      <div className={cn(styles.baseDots)} />
+      <div className={styles.baseDots} />
       <div className={cn("cursor-reveal", styles.revealDots)} />
     </div>
   );

@@ -3,11 +3,11 @@ export { Composer, MAX_CHARS } from "./Composer";
 export { MessageList } from "./MessageList";
 export { TOPICS, TopicBar } from "./TopicBar";
 
-export type { Topic } from "./types";
+export type { Topic } from "@/data/topics";
 
 export {
   CARD_KINDS,
-  CARD_TOOL_NAME,
+  CARD_PART_TYPES,
   cardFromToolPart,
   hasCard,
   isKnownCardKind,

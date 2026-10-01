@@ -22,7 +22,10 @@ import { ThemeToggle } from "@/components/theme/ThemeToggle";
  *
  * Layout note: `GlassPanel` wraps its children in a single `relative block`
  * span, so the flex row lives *inside* that span rather than on the glass
- * surface itself.
+ * surface itself. The bar is a `<header>` landmark, but the glass surface
+ * itself is not a control, so `data-cursor="button"` sits on the actual
+ * interactive children instead — pointing the cursor's 58px ring at the whole
+ * full-width bar would be wrong.
  */
 export function TopBar({ className }: { className?: string }) {
   const linkedin = profile.linkedin.trim();
@@ -32,7 +35,6 @@ export function TopBar({ className }: { className?: string }) {
     <header className="pointer-events-none fixed inset-x-0 top-3 z-50 sm:top-4">
       <GlassPanel
         strong
-        data-cursor="button"
         className={[
           "mx-auto w-[min(94vw,68rem)] rounded-[calc(var(--radius)*1.1)] px-2.5 py-1.5",
           "sm:px-3.5",

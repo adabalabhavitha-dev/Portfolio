@@ -1,6 +1,9 @@
 import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { Geist_Mono, Manrope, Fraunces } from "next/font/google";
+import { ThemeProvider } from "@/components/theme";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "sonner";
 import "./globals.css";
 
 const manrope = Manrope({
@@ -56,7 +59,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       className={`${manrope.variable} ${fraunces.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full">
-        {children}
+        <ThemeProvider>
+          <TooltipProvider delay={200}>
+            {children}
+          </TooltipProvider>
+          <Toaster position="bottom-center" richColors closeButton />
+        </ThemeProvider>
         <Analytics />
       </body>
     </html>

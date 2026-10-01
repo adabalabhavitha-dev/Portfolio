@@ -50,7 +50,8 @@ export function FunCard({
   pending?: boolean;
 }) {
   const reduce = useReducedMotion();
-  const interests = Array.isArray(payload.interests) ? payload.interests : [];
+  // `fun` is the server's key for interests; `interests` is an accepted alias.
+  const interests = payload.fun ?? payload.interests ?? [];
   const strengths = Array.isArray(payload.strengths) ? payload.strengths : [];
 
   return (
@@ -135,6 +136,17 @@ export function FunCard({
               </motion.li>
             ))}
           </ul>
+        </section>
+      ) : null}
+
+      {payload.growth ? (
+        <section aria-label="What I am working on" className="mt-5">
+          <h4 className="text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+            What I am working on
+          </h4>
+          <p className="mt-2 text-[length:var(--text-small)] leading-relaxed text-foreground/85">
+            {payload.growth}
+          </p>
         </section>
       ) : null}
     </CardShell>
